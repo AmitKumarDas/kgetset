@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/client-go/dynamic"
 )
 
 var crdInst *unstructured.Unstructured = &unstructured.Unstructured{
@@ -34,7 +35,9 @@ type crd struct {
 	input  *unstructured.Unstructured
 	output *unstructured.Unstructured
 
-	client *unclient
+	client            *unclient
+	resourceInterface dynamic.ResourceInterface
+
 	abstract
 
 	postthenfn func() error
@@ -68,28 +71,31 @@ func newcrd() *crd {
 	return c
 }
 
-func (c *crd) setup() error {
+func (c *crd) getResourceInterfaceOrDie() dynamic.ResourceInterface {
+	if c.resourceInterface != nil {
+		return c.resourceInterface
+	}
+
 	ri, err := c.client.getResourceInterface(
 		c.input.GroupVersionKind(),
 		c.input.GetNamespace(),
 	)
 	if err != nil {
-		return err
+		panic(err)
 	}
 
+	c.resourceInterface = ri
+	return ri
+}
+
+func (c *crd) setup() (err error) {
+	ri := c.getResourceInterfaceOrDie()
 	_, err = ri.Create(c.input, metav1.CreateOptions{})
-	return err
+	return
 }
 
 func (c *crd) teardown() error {
-	ri, err := c.client.getResourceInterface(
-		c.input.GroupVersionKind(),
-		c.input.GetNamespace(),
-	)
-	if err != nil {
-		return err
-	}
-
+	ri := c.getResourceInterfaceOrDie()
 	deletePropagation := metav1.DeletePropagationForeground
 	return ri.Delete(
 		c.input.GetName(),
@@ -97,17 +103,10 @@ func (c *crd) teardown() error {
 	)
 }
 
-func (c *crd) then() error {
-	ri, err := c.client.getResourceInterface(
-		c.input.GroupVersionKind(),
-		c.input.GetNamespace(),
-	)
-	if err != nil {
-		return err
-	}
-
+func (c *crd) then() (err error) {
+	ri := c.getResourceInterfaceOrDie()
 	c.output, err = ri.Get(c.input.GetName(), metav1.GetOptions{})
-	return err
+	return
 }
 
 func (c *crd) postthen() error {
