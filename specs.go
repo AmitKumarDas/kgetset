@@ -5,29 +5,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-func HelloCRD() *unstructured.Unstructured {
-	return &unstructured.Unstructured{
-		Object: map[string]interface{}{
-			"kind":       "CustomResourceDefinition",
-			"apiVersion": "apiextensions.k8s.io/v1beta1",
-			"metadata": map[string]interface{}{
-				"name": "hellos.openebs.io",
-			},
-			"spec": map[string]interface{}{
-				"group":   "openebs.io",
-				"version": "v1",
-				"scope":   "Namespaced",
-				"names": map[string]interface{}{
-					"plural":     "hellos",
-					"singular":   "hello",
-					"kind":       "Hello",
-					"shortNames": []string{"hello"},
-				},
-			},
-		},
-	}
-}
-
 func HelloResourceUn() *unstructured.Unstructured {
 	return &unstructured.Unstructured{
 		Object: map[string]interface{}{
