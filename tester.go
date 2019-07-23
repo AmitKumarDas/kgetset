@@ -1,7 +1,5 @@
 package kgetset
 
-type action func() error
-
 type testsuite interface {
 	setup() error
 	teardown() error

@@ -17,7 +17,6 @@ COPY go.sum go.sum
 RUN make vendor
 
 # copy go source code
-COPY case_1_test.go case_1_test.go
-COPY specs.go specs.go
+COPY *.go ./
 
 ENTRYPOINT ["make","test"]
