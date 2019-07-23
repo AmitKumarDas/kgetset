@@ -1,0 +1,14 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: test-k8s-get-set
+  labels:
+    img: kgetset
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: kgetset
+        imagePullPolicy: Always
+        image: quay.io/amitkumardas/kgetset:latest

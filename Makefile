@@ -25,7 +25,6 @@ ALL_SRC = $(shell find . -name "*.go" | grep -v -e vendor \
 	-e ".*/*.pb.go")
 ALL_PKGS = $(shell go list $(sort $(dir $(ALL_SRC))) | grep -v vendor)
 ALL_PKG_PATHS = $(shell go list -f '{{.Dir}}' ./...)
-FMT_SRC = $(shell echo "$(ALL_SRC)" | tr ' ' '\n')
 
 # External tools required while building this binary or 
 # to test source code, artifacts in this project
@@ -34,18 +33,12 @@ EXT_TOOLS =\
 	github.com/axw/gocov/gocov \
 	github.com/AlekSi/gocov-xml \
 	github.com/matm/gocov-html
-EXT_TOOLS_DIR = ext-tools/$(OS)
-
-BUILD_LDFLAGS = -X $(PACKAGE_NAME)/lib/utils/build.Hash=$(PACKAGE_VERSION)
-GO_FLAGS = -gcflags '-N -l' -ldflags "$(BUILD_LDFLAGS)"
-GO_VERSION = 1.12
 
 REGISTRY ?= quay.io/amitkumardas
 IMG_NAME ?= kgetset
 
-$(ALL_SRC): ;
-
 ### download modules to local cache
+.PHONY: vendor
 vendor: go.mod go.sum
 	@go mod download
 

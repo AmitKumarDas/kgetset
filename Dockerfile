@@ -20,4 +20,4 @@ RUN make vendor
 COPY case_1_test.go case_1_test.go
 COPY specs.go specs.go
 
-ENTRYPOINT ["make test"]
+ENTRYPOINT ["make","test"]
