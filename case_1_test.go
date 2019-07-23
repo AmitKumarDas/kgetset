@@ -180,6 +180,7 @@ func TestUseCaseA(tt *testing.T) {
 				given:  crdObj,
 				client: client,
 			},
+			vo: &verifyopts{},
 			k8sapi: create(),
 			verify: noopVerify(),
 		},
