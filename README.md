@@ -1,17 +1,26 @@
 ### kgetset
 kubernetes get and set
 
-### Motivation - Test/Verify
-#### Use Case 1
-- Setup:
-  - Apply a CRD into K8s
-- Create corresponding CR into K8s
-- Fetch this CR & do a deep equal check
-- Teardown:
-  - Delete the CRD from K8s
-  - Verify no CR object exist
+### Testsuite
+#### Test Case 1 [WIP]
+- Bring up a microk8s cluster
+- Run `microk8s.kubectl apply -f crd.yaml`
+  - This job does below:
 
-#### Use Case 2
+  ```
+  - Setup:
+    - Apply a CRD
+  - When:
+    - Create a CR at K8s
+    - Fetch this CR from K8s
+  - Then:
+    - expected CR == actual CR
+  - Teardown:
+    - Delete the CRD
+  ```
+
+
+#### Test Case 2 [Not Started]
 - Setup:
   - Apply a CRD into K8s
 - Create corresponding CR into K8s
@@ -26,6 +35,3 @@ kubernetes get and set
 - Teardown:
   - Delete the CRD from k8s
   - Verify no CR objects exist
-
-### Assumtpions
-- K8s Version 1.12
