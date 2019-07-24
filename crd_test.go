@@ -5,7 +5,7 @@ import (
 )
 
 func TestCRD(t *testing.T) {
-	mock := newcrd()
+	mock := newCRD()
 	err := mock.test()
 	if err != nil {
 		t.Fatalf("crd test failed: %+v", err)

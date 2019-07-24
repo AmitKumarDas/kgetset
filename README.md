@@ -9,20 +9,24 @@ kgetset is a verification tool to test CustomResourceDefinition(s) and CustomRes
 
   ```
   - Setup:
-    - Apply a CRD
+    - Apply a CRD into K8s
+    - Fetch this CRD from K8s
+    - Verify if both instances match
   - When:
-    - Create a CR at K8s
+    - Create a CR of above CRD at K8s
     - Fetch this CR from K8s
   - Then:
-    - expected CR == actual CR
+    - Verify if both CR instances match
   - Teardown:
-    - Delete the CRD
+    - Delete the CRD from K8s
   ```
 
 
 #### Test Case 2 [Not Started]
 - Setup:
   - Apply a CRD into K8s
+  - Fetch this CRD from K8s
+  - Verify if both are equal
 - Create corresponding CR into K8s
 - Design a new schema:
   - use same CRD
