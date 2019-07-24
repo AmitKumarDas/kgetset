@@ -23,14 +23,14 @@ type crd struct {
 	abstract
 }
 
-// compile time check if crd implements testsuite
-var _ testsuite = &crd{}
+// compile time check if crd implements Testsuite
+var _ Testsuite = &crd{}
 
 // function based option that helps in building
 // a crd instance
 type crdOption func(*crd)
 
-func newCRD(options ...crdOption) *crd {
+func CRD(options ...crdOption) Testsuite {
 	c := &crd{
 		input:  HelloCRD,
 		client: newUnClientOrDie(),

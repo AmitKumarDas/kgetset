@@ -1,13 +1,13 @@
 package kgetset
 
-type testsuite interface {
+type Testsuite interface {
 	setup() error
 	postsetup() error
 
 	teardown() error
 	postteardown() error
 
-	test() error
+	Test() error
 }
 
 type bdd interface {
@@ -82,7 +82,7 @@ func (t *abstract) then() error {
 	return t.thenfn()
 }
 
-func (t *abstract) test() error {
+func (t *abstract) Test() error {
 	var steps = t.steps
 
 	if len(t.steps) == 0 {

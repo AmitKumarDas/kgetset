@@ -3,9 +3,6 @@ FROM golang:1.12.5 as builder
 
 WORKDIR /workspace
 
-# copy build manifests
-COPY Makefile Makefile
-
 # copy go modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
@@ -16,21 +13,27 @@ COPY go.sum go.sum
 # we cache the vendored dependencies before building and copying source
 # so that we don't need to re-download when source changes don't invalidate
 # our downloaded layer
-RUN make vendor-cache
+RUN go mod download
+RUN go mod vendor
+
+# copy build manifests
+COPY Makefile Makefile
 
 # copy go source code
 COPY util/ util/
+COPY cmd/ cmd/
 COPY *.go ./
 
-# build the binary
-RUN make lbins
-RUN /bin/bash -c 'ls -la; chmod +x /workspace/kgetset.linux; ls -la'
+# build kgetset binary
+RUN make bins
 
-# Use distroless as minimal base image to package the manager binary
-# Refer to https://github.com/GoogleContainerTools/distroless for more details
+# Use distroless as minimal base image to package the final binary
+#
+# Refer to https://github.com/GoogleContainerTools/distroless
 FROM gcr.io/distroless/static:latest
 
 WORKDIR /
-COPY --from=builder /workspace/kgetset.linux /
 
-ENTRYPOINT ["/kgetset.linux"]
+COPY --from=builder /workspace/kgetset /
+
+ENTRYPOINT ["/kgetset"]

@@ -40,24 +40,21 @@ IMG_NAME ?= kgetset
 BUILD_LDFLAGS = -X $(PACKAGE_NAME)/util/build.Hash=$(PACKAGE_VERSION)
 GO_FLAGS = -gcflags '-N -l' -ldflags "$(BUILD_LDFLAGS)"
 
-### linux based binary
-lbins: $(IMG_NAME).linux
+### build the binary
+bins: $(IMG_NAME)
 
-$(IMG_NAME).linux: $(ALL_SRC)
+$(IMG_NAME): $(ALL_SRC)
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on \
-		go build -tags bins $(GO_FLAGS) -o $@ *.go
+		go build -tags bins $(GO_FLAGS) -o $@ cmd/main.go
 
 $(ALL_SRC): ;
 
+### download modules to local cache
 ### make vendored copy of dependencies
 .PHONY: vendor
 vendor: go.mod go.sum
-	@export GO111MODULES=on go mod vendor
-
-### download modules to local cache
-.PHONY: vendor-cache
-vendor-cache: go.mod go.sum
 	@export GO111MODULES=on go mod download
+	@export GO111MODULES=on go mod vendor
 
 .PHONY: ext-tools
 ext-tools: $(EXT_TOOLS)
