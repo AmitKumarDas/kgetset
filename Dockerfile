@@ -19,6 +19,17 @@ COPY go.sum go.sum
 RUN make vendor-cache
 
 # copy go source code
+COPY util/ util/
 COPY *.go ./
 
-ENTRYPOINT ["make","test"]
+# build the binary
+RUN make lbins
+
+# Use distroless as minimal base image to package the manager binary
+# Refer to https://github.com/GoogleContainerTools/distroless for more details
+FROM gcr.io/distroless/static:latest
+
+WORKDIR /
+COPY --from=builder /workspace/kgetset.linux .
+
+ENTRYPOINT ["/kgetset.linux"]

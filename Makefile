@@ -37,6 +37,18 @@ EXT_TOOLS =\
 REGISTRY ?= quay.io/amitkumardas
 IMG_NAME ?= kgetset
 
+BUILD_LDFLAGS = -X $(PACKAGE_NAME)/util/build.Hash=$(PACKAGE_VERSION)
+GO_FLAGS = -gcflags '-N -l' -ldflags "$(BUILD_LDFLAGS)"
+
+### linux based binary
+lbins: $(IMG_NAME).linux
+
+$(IMG_NAME).linux: $(ALL_SRC)
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on \
+		go build -tags bins $(GO_FLAGS) -o $@ *.go
+
+$(ALL_SRC): ;
+
 ### make vendored copy of dependencies
 .PHONY: vendor
 vendor: go.mod go.sum
