@@ -24,12 +24,13 @@ COPY *.go ./
 
 # build the binary
 RUN make lbins
+RUN /bin/bash -c 'ls -la; chmod +x /workspace/kgetset.linux; ls -la'
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 FROM gcr.io/distroless/static:latest
 
 WORKDIR /
-COPY --from=builder /workspace/kgetset.linux .
+COPY --from=builder /workspace/kgetset.linux /
 
 ENTRYPOINT ["/kgetset.linux"]
