@@ -1,5 +1,5 @@
 ### kgetset
-kubernetes get and set
+kgetset is a verification tool to test CustomResourceDefinition(s) and CustomResource(s)
 
 ### Testsuite
 #### Test Case 1 [WIP]

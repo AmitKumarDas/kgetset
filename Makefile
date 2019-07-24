@@ -37,10 +37,15 @@ EXT_TOOLS =\
 REGISTRY ?= quay.io/amitkumardas
 IMG_NAME ?= kgetset
 
-### download modules to local cache
+### make vendored copy of dependencies
 .PHONY: vendor
 vendor: go.mod go.sum
-	@go mod download
+	@export GO111MODULES=on go mod vendor
+
+### download modules to local cache
+.PHONY: vendor-cache
+vendor-cache: go.mod go.sum
+	@export GO111MODULES=on go mod download
 
 .PHONY: ext-tools
 ext-tools: $(EXT_TOOLS)
@@ -49,7 +54,7 @@ ext-tools: $(EXT_TOOLS)
 .PHONY: $(EXT_TOOLS)
 $(EXT_TOOLS):
 	@echo "Installing external tool $@"
-	@GO111MODULES=on go get -u $@
+	@go get -u $@
 
 ### Target to build the docker image
 .PHONY: image publish
