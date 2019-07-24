@@ -74,7 +74,9 @@ func (c *crd) getResourceInterfaceOrDie() dynamic.ResourceInterface {
 
 func (c *crd) setup() (err error) {
 	ri := c.getResourceInterfaceOrDie()
+	// create at K8s
 	_, err = ri.Create(c.input, metav1.CreateOptions{})
+	// fetch the same from K8s
 	c.output, err = ri.Get(c.input.GetName(), metav1.GetOptions{})
 	return
 }
