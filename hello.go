@@ -1,7 +1,6 @@
 package kgetset
 
 import (
-	"encoding/json"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -131,37 +130,32 @@ func (c *helloTestA) getResourceInterfaceOrDie() dynamic.ResourceInterface {
 
 func (c *helloTestA) setup() (err error) {
 	ri := c.getResourceInterfaceOrDie()
+
 	// create at K8s
 	_, err = ri.Create(c.input, metav1.CreateOptions{})
 	if err != nil {
 		return err
 	}
+
 	// fetch the same from K8s
 	c.output, err = ri.Get(c.input.GetName(), metav1.GetOptions{})
 	return
 }
 
 func (c *helloTestA) postsetup() error {
-	inames, _, _ := unstructured.NestedFieldNoCopy(c.input.Object, "spec", "names")
-	onames, _, _ := unstructured.NestedFieldNoCopy(c.output.Object, "spec", "names")
+	isdiff, err := IsDiff(c.input, c.output)
+	if err != nil {
+		return err
+	}
 
-	if len(inames.(map[string]interface{})) == len(onames.(map[string]interface{})) {
+	if !isdiff {
 		return nil
 	}
 
-	i, err := json.MarshalIndent(c.input, "", ".")
-	if err != nil {
-		return err
-	}
-	o, err := json.MarshalIndent(c.output, "", ".")
-	if err != nil {
-		return err
-	}
-
 	return errors.Errorf(
-		"mismatch found:\ninput definition:--\n%s\noutput definition:--\n%s",
-		string(i),
-		string(o),
+		"mismatch found:\ninput definition:--\n%+v\noutput definition:--\n%+v",
+		c.input,
+		c.output,
 	)
 }
 
