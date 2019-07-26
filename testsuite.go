@@ -1,19 +1,13 @@
 package kgetset
 
 type Testsuite interface {
-	setup() error
-	postsetup() error
-
-	teardown() error
-	postteardown() error
-
 	Test() error
 }
 
-type bdd interface {
-	given() error
-	when() error
-	then() error
+type BDD interface {
+	Given() error
+	When() error
+	Then() error
 }
 
 // abstract as the name suggests abstracts some
@@ -61,21 +55,21 @@ func (t *abstract) postteardown() error {
 	return t.postteardownfn()
 }
 
-func (t *abstract) given() error {
+func (t *abstract) Given() error {
 	if t.givenfn == nil {
 		return nil
 	}
 	return t.givenfn()
 }
 
-func (t *abstract) when() error {
+func (t *abstract) When() error {
 	if t.whenfn == nil {
 		return nil
 	}
 	return t.whenfn()
 }
 
-func (t *abstract) then() error {
+func (t *abstract) Then() error {
 	if t.thenfn == nil {
 		return nil
 	}
