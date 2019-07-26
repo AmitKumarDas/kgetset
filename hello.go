@@ -142,8 +142,8 @@ func (c *helloTestA) setup() (err error) {
 }
 
 func (c *helloTestA) postsetup() error {
-	inames, _, _ := unstructured.NestedFieldCopy(c.input.Object, "spec", "names")
-	onames, _, _ := unstructured.NestedFieldCopy(c.output.Object, "spec", "names")
+	inames, _, _ := unstructured.NestedFieldNoCopy(c.input.Object, "spec", "names")
+	onames, _, _ := unstructured.NestedFieldNoCopy(c.output.Object, "spec", "names")
 
 	if len(inames.(map[string]interface{})) == len(onames.(map[string]interface{})) {
 		return nil

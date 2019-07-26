@@ -35,6 +35,7 @@ func (t *abstract) setup() error {
 	if t.setupfn == nil {
 		return nil
 	}
+	fmt.Println("will execute setup")
 	return t.setupfn()
 }
 
@@ -42,6 +43,7 @@ func (t *abstract) postsetup() error {
 	if t.postsetupfn == nil {
 		return nil
 	}
+	fmt.Println("will execute postsetup")
 	return t.postsetupfn()
 }
 
@@ -49,6 +51,7 @@ func (t *abstract) teardown() error {
 	if t.teardownfn == nil {
 		return nil
 	}
+	fmt.Println("will execute teardown")
 	return t.teardownfn()
 }
 
@@ -56,6 +59,7 @@ func (t *abstract) postteardown() error {
 	if t.postteardownfn == nil {
 		return nil
 	}
+	fmt.Println("will execute postteardown")
 	return t.postteardownfn()
 }
 
@@ -63,6 +67,7 @@ func (t *abstract) Given() error {
 	if t.givenfn == nil {
 		return nil
 	}
+	fmt.Println("will execute given")
 	return t.givenfn()
 }
 
@@ -70,6 +75,7 @@ func (t *abstract) When() error {
 	if t.whenfn == nil {
 		return nil
 	}
+	fmt.Println("will execute when")
 	return t.whenfn()
 }
 
@@ -77,6 +83,7 @@ func (t *abstract) Then() error {
 	if t.thenfn == nil {
 		return nil
 	}
+	fmt.Println("will execute then")
 	return t.thenfn()
 }
 
@@ -85,13 +92,13 @@ func (t *abstract) Test() error {
 
 	if len(t.steps) == 0 {
 		steps = []func() error{
-			t.setupfn,
-			t.postsetupfn,
-			t.givenfn,
-			t.whenfn,
-			t.thenfn,
-			t.teardownfn,
-			t.postteardownfn,
+			t.setup,
+			t.postsetup,
+			t.Given,
+			t.When,
+			t.Then,
+			t.teardown,
+			t.postteardown,
 		}
 	}
 
@@ -99,7 +106,7 @@ func (t *abstract) Test() error {
 		err := fn()
 		if err != nil {
 			// try teardown anyway
-			e := t.teardownfn()
+			e := t.teardown()
 			fmt.Printf("teardown was attempted for the setup: %+v", e)
 
 			return err
