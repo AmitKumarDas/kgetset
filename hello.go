@@ -1,8 +1,6 @@
 package kgetset
 
 import (
-	"reflect"
-
 	"encoding/json"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -69,7 +67,7 @@ type HelloStatus struct {
 	Phase string `json:"phase"`
 }
 
-type crdsuite struct {
+type helloTestA struct {
 	// crd definition given to cluster
 	input *unstructured.Unstructured
 
@@ -82,15 +80,15 @@ type crdsuite struct {
 	abstract
 }
 
-// compile time check if crd implements Testsuite
-var _ Testsuite = &crdsuite{}
+// compile time check if helloTestA implements Testsuite
+var _ Testsuite = &helloTestA{}
 
 // function based option that helps in building
 // a crd instance
-type crdOption func(*crdsuite)
+type helloTestAOpt func(*helloTestA)
 
-func CRD(options ...crdOption) Testsuite {
-	c := &crdsuite{
+func HelloTestA(options ...helloTestAOpt) Testsuite {
+	c := &helloTestA{
 		input:  helloCRDInst,
 		client: newUnClientOrDie(),
 	}
@@ -114,7 +112,7 @@ func CRD(options ...crdOption) Testsuite {
 	return c
 }
 
-func (c *crdsuite) getResourceInterfaceOrDie() dynamic.ResourceInterface {
+func (c *helloTestA) getResourceInterfaceOrDie() dynamic.ResourceInterface {
 	if c.resourceInterface != nil {
 		return c.resourceInterface
 	}
@@ -131,17 +129,23 @@ func (c *crdsuite) getResourceInterfaceOrDie() dynamic.ResourceInterface {
 	return ri
 }
 
-func (c *crdsuite) setup() (err error) {
+func (c *helloTestA) setup() (err error) {
 	ri := c.getResourceInterfaceOrDie()
 	// create at K8s
 	_, err = ri.Create(c.input, metav1.CreateOptions{})
+	if err != nil {
+		return err
+	}
 	// fetch the same from K8s
 	c.output, err = ri.Get(c.input.GetName(), metav1.GetOptions{})
 	return
 }
 
-func (c *crdsuite) postsetup() error {
-	if reflect.DeepEqual(c.input, c.output) {
+func (c *helloTestA) postsetup() error {
+	inames, _, _ := unstructured.NestedFieldCopy(c.input.Object, "spec", "names")
+	onames, _, _ := unstructured.NestedFieldCopy(c.output.Object, "spec", "names")
+
+	if len(inames.(map[string]interface{})) == len(onames.(map[string]interface{})) {
 		return nil
 	}
 
@@ -161,7 +165,7 @@ func (c *crdsuite) postsetup() error {
 	)
 }
 
-func (c *crdsuite) teardown() error {
+func (c *helloTestA) teardown() error {
 	ri := c.getResourceInterfaceOrDie()
 	deletePropagation := metav1.DeletePropagationForeground
 	return ri.Delete(

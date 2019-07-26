@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	c := k8s.CRD()
+	c := k8s.HelloTestA()
 	err := c.Test()
 	if err != nil {
 		panic(err)

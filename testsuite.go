@@ -1,5 +1,9 @@
 package kgetset
 
+import (
+	"fmt"
+)
+
 type Testsuite interface {
 	Test() error
 }
@@ -95,7 +99,9 @@ func (t *abstract) Test() error {
 		err := fn()
 		if err != nil {
 			// try teardown anyway
-			t.teardownfn()
+			e := t.teardownfn()
+			fmt.Printf("teardown was attempted for the setup: %+v", e)
+
 			return err
 		}
 	}
