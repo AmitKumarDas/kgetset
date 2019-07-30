@@ -7,6 +7,7 @@ kgetset is a verification tool to test CustomResourceDefinition(s) and CustomRes
   - This job verifies below test cases:
 
 #### Test Case 1
+- This is implemented in `hello` package
 ```
 - Setup:
   - Apply a CRD into K8s
@@ -28,7 +29,7 @@ kgetset is a verification tool to test CustomResourceDefinition(s) and CustomRes
   - Fetch first CR from K8s
   - Fetch second CR from k8s
 - Then:
-  - Verify if CR instances match for all the above cases
+  - Verify if CR instances match with their respective schemas
 - Teardown:
   - Delete the CRD from K8s
   - Verify if all the CRs get deleted

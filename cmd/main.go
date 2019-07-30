@@ -1,11 +1,11 @@
 package main
 
 import (
-  k8s "github.com/AmitKumarDas/kgetset"
+  "github.com/AmitKumarDas/kgetset/hello"
 )
 
 func main() {
-	c := k8s.HelloTestA()
+	c := hello.NewTestA()
 	err := c.Test()
 	if err != nil {
 		panic(err)

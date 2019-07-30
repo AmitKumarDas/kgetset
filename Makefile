@@ -53,8 +53,8 @@ $(ALL_SRC): ;
 ### make vendored copy of dependencies
 .PHONY: vendor
 vendor: go.mod go.sum
-	@export GO111MODULE=on go mod vendor
 	@export GO111MODULE=on go mod download
+	@export GO111MODULE=on go mod vendor
 
 .PHONY: ext-tools
 ext-tools: $(EXT_TOOLS)
@@ -79,7 +79,7 @@ publish: image
 test: unit-test
 
 unit-test: 
-	@go test
+	@go test $(ALL_PKG_PATHS) 
 
 gofmt:
 	@go fmt $(ALL_PKG_PATHS)

@@ -22,6 +22,8 @@ COPY Makefile Makefile
 # copy go source code
 COPY util/ util/
 COPY cmd/ cmd/
+COPY hello/ hello/
+COPY unstruct/ unstruct/
 COPY *.go ./
 
 # build kgetset binary

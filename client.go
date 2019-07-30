@@ -9,14 +9,14 @@ import (
 	"k8s.io/client-go/restmapper"
 )
 
-type unclient struct {
+type Unclient struct {
 	dynamic dynamic.Interface
 
 	// Mapper is used to map GroupVersionKinds to Resources
 	mapper meta.RESTMapper
 }
 
-func newUnClientOrDie() *unclient {
+func NewUnClientOrDie() *Unclient {
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		panic(err)
@@ -33,13 +33,16 @@ func newUnClientOrDie() *unclient {
 	if err != nil {
 		panic(err)
 	}
-	return &unclient{
+	return &Unclient{
 		dynamic: dyn,
 		mapper:  restmapper.NewDiscoveryRESTMapper(gr),
 	}
 }
 
-func (uc *unclient) getResourceInterface(gvk schema.GroupVersionKind, ns string) (dynamic.ResourceInterface, error) {
+func (uc *Unclient) GetResourceInterface(
+	gvk schema.GroupVersionKind,
+	ns string,
+) (dynamic.ResourceInterface, error) {
 	mapping, err := uc.mapper.RESTMapping(gvk.GroupKind(), gvk.Version)
 	if err != nil {
 		return nil, err

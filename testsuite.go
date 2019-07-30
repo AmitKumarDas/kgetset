@@ -14,91 +14,91 @@ type BDD interface {
 	Then() error
 }
 
-// abstract as the name suggests abstracts some
+// TestAbstract as the name suggests abstracts some
 // of the common features required by instances
 // implementing bdd or testsuite interface
-type abstract struct {
-	steps []func() error
+type TestAbstract struct {
+	Steps []func() error
 
-	setupfn     func() error
-	postsetupfn func() error
+	Setupfn     func() error
+	Postsetupfn func() error
 
-	teardownfn     func() error
-	postteardownfn func() error
+	Teardownfn     func() error
+	Postteardownfn func() error
 
-	givenfn func() error
-	whenfn  func() error
-	thenfn  func() error
+	Givenfn func() error
+	Whenfn  func() error
+	Thenfn  func() error
 }
 
-func (t *abstract) setup() error {
-	if t.setupfn == nil {
+func (t *TestAbstract) Setup() error {
+	if t.Setupfn == nil {
 		return nil
 	}
 	fmt.Println("will execute setup")
-	return t.setupfn()
+	return t.Setupfn()
 }
 
-func (t *abstract) postsetup() error {
-	if t.postsetupfn == nil {
+func (t *TestAbstract) Postsetup() error {
+	if t.Postsetupfn == nil {
 		return nil
 	}
 	fmt.Println("will execute postsetup")
-	return t.postsetupfn()
+	return t.Postsetupfn()
 }
 
-func (t *abstract) teardown() error {
-	if t.teardownfn == nil {
+func (t *TestAbstract) Teardown() error {
+	if t.Teardownfn == nil {
 		return nil
 	}
 	fmt.Println("will execute teardown")
-	return t.teardownfn()
+	return t.Teardownfn()
 }
 
-func (t *abstract) postteardown() error {
-	if t.postteardownfn == nil {
+func (t *TestAbstract) Postteardown() error {
+	if t.Postteardownfn == nil {
 		return nil
 	}
 	fmt.Println("will execute postteardown")
-	return t.postteardownfn()
+	return t.Postteardownfn()
 }
 
-func (t *abstract) Given() error {
-	if t.givenfn == nil {
+func (t *TestAbstract) Given() error {
+	if t.Givenfn == nil {
 		return nil
 	}
 	fmt.Println("will execute given")
-	return t.givenfn()
+	return t.Givenfn()
 }
 
-func (t *abstract) When() error {
-	if t.whenfn == nil {
+func (t *TestAbstract) When() error {
+	if t.Whenfn == nil {
 		return nil
 	}
 	fmt.Println("will execute when")
-	return t.whenfn()
+	return t.Whenfn()
 }
 
-func (t *abstract) Then() error {
-	if t.thenfn == nil {
+func (t *TestAbstract) Then() error {
+	if t.Thenfn == nil {
 		return nil
 	}
 	fmt.Println("will execute then")
-	return t.thenfn()
+	return t.Thenfn()
 }
 
-func (t *abstract) Test() error {
-	var steps = t.steps
+func (t *TestAbstract) Test() error {
+	var steps = t.Steps
 
-	if len(t.steps) == 0 {
+	if len(steps) == 0 {
 		steps = []func() error{
-			t.setup,
-			t.postsetup,
+			t.Setup,
+			t.Postsetup,
 			t.Given,
 			t.When,
 			t.Then,
-			t.teardown,
-			t.postteardown,
+			t.Teardown,
+			t.Postteardown,
 		}
 	}
 
@@ -106,7 +106,7 @@ func (t *abstract) Test() error {
 		err := fn()
 		if err != nil {
 			// try teardown anyway
-			e := t.teardown()
+			e := t.Teardown()
 			fmt.Printf("teardown was attempted for the setup: %+v", e)
 
 			return err
