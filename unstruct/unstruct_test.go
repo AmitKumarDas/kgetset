@@ -1,8 +1,8 @@
 package unstruct
 
 import (
-  "testing"
-  
+	"testing"
+
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
@@ -69,71 +69,71 @@ var testUnstructInstD *unstructured.Unstructured = &unstructured.Unstructured{
 }
 
 func TestIsChangeStrWithSameName(t *testing.T) {
-  changed, err := IsChangeStr(testUnstructInstA, testUnstructInstA, "metadata.name")
-  if err != nil {
-    t.Fatalf("test failed: %+v", err)
-  }
-  if changed {
-    t.Fatalf("test failed: expected no change got change")
-  }
+	changed, err := IsChangeStr(testUnstructInstA, testUnstructInstA, "metadata.name")
+	if err != nil {
+		t.Fatalf("test failed: %+v", err)
+	}
+	if changed {
+		t.Fatalf("test failed: expected no change got change")
+	}
 }
 
 func TestIsChangeStrWithDiffName(t *testing.T) {
-  changed, err := IsChangeStr(testUnstructInstA, testUnstructInstB, "metadata.name")
-  if err != nil {
-    t.Fatalf("test failed: %+v", err)
-  }
-  if !changed {
-    t.Fatalf("test failed: expected change got no change")
-  }
+	changed, err := IsChangeStr(testUnstructInstA, testUnstructInstB, "metadata.name")
+	if err != nil {
+		t.Fatalf("test failed: %+v", err)
+	}
+	if !changed {
+		t.Fatalf("test failed: expected change got no change")
+	}
 }
 
 func TestIsChangeStrWithSameGroup(t *testing.T) {
-  changed, err := IsChangeStr(testUnstructInstC, testUnstructInstD, "spec.group")
-  if err != nil {
-    t.Fatalf("test failed: %+v", err)
-  }
-  if changed {
-    t.Fatalf("test failed: expected no change got change")
-  }
+	changed, err := IsChangeStr(testUnstructInstC, testUnstructInstD, "spec.group")
+	if err != nil {
+		t.Fatalf("test failed: %+v", err)
+	}
+	if changed {
+		t.Fatalf("test failed: expected no change got change")
+	}
 }
 
 func TestIsChangeStrWithSameNamespace(t *testing.T) {
-  changed, err := IsChangeStr(testUnstructInstC, testUnstructInstD, "spec.namespace")
-  if err != nil {
-    t.Fatalf("test failed: %+v", err)
-  }
-  if changed {
-    t.Fatalf("test failed: expected no change got change")
-  }
+	changed, err := IsChangeStr(testUnstructInstC, testUnstructInstD, "spec.namespace")
+	if err != nil {
+		t.Fatalf("test failed: %+v", err)
+	}
+	if changed {
+		t.Fatalf("test failed: expected no change got change")
+	}
 }
 
 func TestIsChangeStrWithSameSingularName(t *testing.T) {
-  changed, err := IsChangeStr(testUnstructInstC, testUnstructInstC, "spec.names.singular")
-  if err != nil {
-    t.Fatalf("test failed: %+v", err)
-  }
-  if changed {
-    t.Fatalf("test failed: expected no change got change")
-  }
+	changed, err := IsChangeStr(testUnstructInstC, testUnstructInstC, "spec.names.singular")
+	if err != nil {
+		t.Fatalf("test failed: %+v", err)
+	}
+	if changed {
+		t.Fatalf("test failed: expected no change got change")
+	}
 }
 
 func TestIsChangeStrWithSameEverything(t *testing.T) {
-  changed, err := IsChangeStr(
-    testUnstructInstC, 
-    testUnstructInstC, 
-    "metadata.name",
-    "spec.group",
-    "spec.version",
-    "spec.scope",
-    "spec.names.plural",
-    "spec.names.singular",
-    "spec.names.kind",
-  )
-  if err != nil {
-    t.Fatalf("test failed: %+v", err)
-  }
-  if changed {
-    t.Fatalf("test failed: expected no change got change")
-  }
+	changed, err := IsChangeStr(
+		testUnstructInstC,
+		testUnstructInstC,
+		"metadata.name",
+		"spec.group",
+		"spec.version",
+		"spec.scope",
+		"spec.names.plural",
+		"spec.names.singular",
+		"spec.names.kind",
+	)
+	if err != nil {
+		t.Fatalf("test failed: %+v", err)
+	}
+	if changed {
+		t.Fatalf("test failed: expected no change got change")
+	}
 }

@@ -24,13 +24,12 @@ kgetset is a verification tool to test CustomResourceDefinition(s) and CustomRes
   - Apply a CRD into K8s
 - When:
   - Create a CR of above CRD at K8s
-  - Create a second CR of above GVK but using a new schema
+  - Create a second CR of above CRD but using a new schema
 - Then:
-  - Fetch first CR from K8s
-  - Fetch second CR from k8s
-- Then:
-  - Verify if CR instances match with their respective schemas
+  - Fetch first CR from K8s & match with local instance
+  - Fetch second CR from k8s & match with local instance
 - Teardown:
   - Delete the CRD from K8s
+- PostTeardown:
   - Verify if all the CRs get deleted
 ```

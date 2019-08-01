@@ -90,6 +90,7 @@ lint: gofmt
 	@echo "---------------------"
 	@golangci-lint run --disable-all \
 		--deadline 5m \
+		--enable=govet \
 		--enable=misspell \
 		--enable=structcheck \
 		--enable=golint \

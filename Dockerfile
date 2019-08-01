@@ -24,6 +24,7 @@ COPY util/ util/
 COPY cmd/ cmd/
 COPY hello/ hello/
 COPY unstruct/ unstruct/
+COPY onegvkdiffschemas/ onegvkdiffschemas/
 COPY *.go ./
 
 # build kgetset binary

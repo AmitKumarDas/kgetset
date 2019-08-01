@@ -26,7 +26,7 @@ var crdInst *unstructured.Unstructured = &unstructured.Unstructured{
 	},
 }
 
-var resourceInst *unstructured.Unstructured = &unstructured.Unstructured{
+var _ *unstructured.Unstructured = &unstructured.Unstructured{
 	Object: map[string]interface{}{
 		"kind":       "Hello",
 		"apiVersion": "v1",
@@ -52,14 +52,14 @@ type Hello struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   HelloSpec   `json:"spec,omitempty"`
-	Status HelloStatus `json:"status,omitempty"`
+	Spec   Spec   `json:"spec,omitempty"`
+	Status Status `json:"status,omitempty"`
 }
 
-type HelloSpec struct {
+type Spec struct {
 	Message string `json:"message"`
 }
 
-type HelloStatus struct {
+type Status struct {
 	Phase string `json:"phase"`
 }

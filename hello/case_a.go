@@ -1,12 +1,12 @@
 package hello
 
 import (
+	k8s "github.com/AmitKumarDas/kgetset"
+	"github.com/AmitKumarDas/kgetset/unstruct"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
-  k8s "github.com/AmitKumarDas/kgetset"
-  "github.com/AmitKumarDas/kgetset/unstruct"
 )
 
 type TestA struct {
@@ -16,7 +16,7 @@ type TestA struct {
 	// crd definition fetched from cluster
 	output *unstructured.Unstructured
 
-	client            *k8s.Unclient
+	client            *k8s.DynClient
 	resourceInterface dynamic.ResourceInterface
 
 	k8s.TestAbstract
@@ -28,20 +28,12 @@ var _ k8s.Testsuite = &TestA{}
 func NewTestA(options ...func(*TestA)) *TestA {
 	c := &TestA{
 		input:  crdInst,
-		client: k8s.NewUnClientOrDie(),
+		client: k8s.NewDynClientOrDie(),
 	}
 
-	c.Setupfn = func() error {
-		return c.setup()
-	}
-
-	c.Postsetupfn = func() error {
-		return c.postsetup()
-	}
-
-	c.Teardownfn = func() error {
-		return c.teardown()
-	}
+	c.Setupfn = c.setup
+	c.PostSetupfn = c.postsetup
+	c.Teardownfn = c.teardown
 
 	for _, o := range options {
 		o(c)
@@ -83,11 +75,11 @@ func (c *TestA) setup() (err error) {
 
 func (c *TestA) postsetup() error {
 	var paths = []string{
-   "spec.version",
-   "spec.group",
-   "spec.scope",
-  }
-	
+		"spec.version",
+		"spec.group",
+		"spec.scope",
+	}
+
 	changed, err := unstruct.IsChangeStr(c.input, c.output, "metadata.name", paths...)
 	if err != nil {
 		return err

@@ -1,11 +1,11 @@
 package main
 
 import (
-  "github.com/AmitKumarDas/kgetset/hello"
+	testing "github.com/AmitKumarDas/kgetset/onegvkdiffschemas"
 )
 
 func main() {
-	c := hello.NewTestA()
+	c := testing.NewTestA()
 	err := c.Test()
 	if err != nil {
 		panic(err)
